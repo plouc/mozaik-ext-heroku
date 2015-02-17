@@ -1,7 +1,5 @@
 var Heroku = require('heroku-client');
 
-var config = require('./../../../config');
-
 var heroku;
 
 function getClient() {
@@ -19,5 +17,3 @@ module.exports = {
         return getClient().apps(params.app).info();
     }
 };
-
-require('./../../../lib').hub.registerApi('heroku', module.exports);
