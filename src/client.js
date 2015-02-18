@@ -1,19 +1,33 @@
 var Heroku = require('heroku-client');
+var chalk  = require('chalk');
+var config = require('./config');
 
-var heroku;
 
-function getClient() {
-    if (!heroku) {
-        heroku = new Heroku({
-            token: config.api.heroku.apiToken
-        });
+/**
+ * @param {Mozaik} context
+ */
+var client = function (context) {
+
+    // load and validate config
+    config.load(context.config.api);
+    try {
+        config.validate();
+    } catch (e) {
+        context.logger.error(chalk.red(e.message));
+        process.exit(1);
     }
 
-    return heroku;
-}
+    var heroku = new Heroku({
+        token: config.get('heroku.token')
+    });
 
-module.exports = {
-    appInfo: function (params) {
-        return getClient().apps(params.app).info();
-    }
+    return {
+        appInfo(params) {
+            context.logger.info(chalk.yellow(`[heroku] fetching ${ params.app } app info`));
+
+            return heroku.apps(params.app).info();
+        }
+    };
 };
+
+module.exports = client;
