@@ -2,7 +2,6 @@ var Heroku = require('heroku-client');
 var chalk  = require('chalk');
 var config = require('./config');
 
-
 /**
  * @param {Mozaik} mozaik
  */
@@ -16,7 +15,7 @@ var client = function (mozaik) {
 
     return {
         appInfo(params) {
-            context.logger.info(chalk.yellow(`[heroku] fetching ${ params.app } app info`));
+            mozaik.logger.info(chalk.yellow(`[heroku] fetching ${ params.app } app info`));
 
             return heroku.apps(params.app).info();
         }
